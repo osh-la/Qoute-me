@@ -1,9 +1,17 @@
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 
+const defaultImages = [
+  '/images/bg1.jpg',
+  '/images/bg2.jpg',
+  '/images/bg3.jpg',
+  '/images/bg4.jpg',
+]
+
 export default function App() {
   const [image, setImage] = useState(null)
   const [quote, setQuote] = useState('')
+  const [author, setAuthor] = useState('')
   const previewRef = useRef()
 
   const handleImageUpload = (e) => {
@@ -28,15 +36,37 @@ export default function App() {
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-4">Quote Me</h1>
 
+      {/* Inputs */}
       <div className="flex flex-col gap-2 w-full max-w-md">
         <input type="file" accept="image/*" onChange={handleImageUpload} />
+
         <textarea
           className="p-2 border rounded resize-none"
           rows="3"
-          placeholder="Enter your quote..."
+          placeholder="Enter the quote..."
           value={quote}
           onChange={(e) => setQuote(e.target.value)}
         />
+
+        <input
+          type="text"
+          className="p-2 border rounded"
+          placeholder="Author's name"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+      </div>
+
+      {/* Default image options */}
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        {defaultImages.map((src, idx) => (
+          <img
+            key={idx}
+            src={src}
+            onClick={() => setImage(src)}
+            className="w-32 h-32 object-cover cursor-pointer rounded hover:ring-2 hover:ring-black"
+          />
+        ))}
       </div>
 
       {/* Preview */}
@@ -45,13 +75,14 @@ export default function App() {
         className="relative mt-6 w-full max-w-md aspect-[4/5] bg-white overflow-hidden rounded shadow-md"
       >
         {image && (
-          <img src={image} alt="Uploaded" className="absolute w-full h-full object-cover" />
+          <img src={image} alt="Selected" className="absolute w-full h-full object-cover" />
         )}
-        {quote && (
-          <div className="absolute inset-0 flex items-center justify-center p-4">
-            <p className="text-white text-xl font-semibold text-center drop-shadow-md">
-              {quote}
-            </p>
+        {(quote || author) && (
+          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black/40">
+            <p className="text-white text-xl font-semibold text-center whitespace-pre-line">{quote}</p>
+            {author && (
+              <p className="text-white text-sm font-light mt-2 text-center">— {author}</p>
+            )}
           </div>
         )}
       </div>
