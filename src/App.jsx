@@ -21,7 +21,7 @@ export default function App() {
 
   const downloadImage = async () => {
     if (!previewRef.current) return
-    const canvas = await html2canvas(previewRef.current)
+    const canvas = await html2canvas(previewRef.current, { scale: 2 })
     const link = document.createElement('a')
     link.download = 'quote-me.png'
     link.href = canvas.toDataURL()
@@ -73,7 +73,7 @@ export default function App() {
         />
       </div>
 
-      {/* Background color options */}
+
       <div className="mt-4">
         <p className="font-semibold mb-1">Choose Background Color:</p>
         <div className="flex gap-2">
@@ -81,7 +81,7 @@ export default function App() {
             <button
               key={opt.value}
               onClick={() => {
-                setImage(null)
+                if (image) setImage(null)
                 setBgColor(opt.value)
               }}
               className={`${opt.value} w-8 h-8 rounded-full border-2 border-gray-300`}
@@ -90,7 +90,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Text color options */}
       <div className="mt-4">
         <p className="font-semibold mb-1">Choose Text Color:</p>
         <div className="flex gap-2">
@@ -105,7 +104,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Font style options */}
       <div className="mt-4">
         <p className="font-semibold mb-1">Choose Font Style:</p>
         <select
@@ -113,17 +111,21 @@ export default function App() {
           className="p-2 border rounded"
         >
           {fonts.map((font) => (
-            <option key={font.value} value={font.value}>
+            <option
+              key={font.value}
+              value={font.value}
+              style={{ fontFamily: font.value }}
+            >
               {font.name}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Preview */}
+  
       <div
         ref={previewRef}
-        className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden rounded shadow-md ${!image ? bgColor : ''}`}
+        className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md ${!image ? bgColor : ''}`}
       >
         {image && (
           <img src={image} alt="Selected" className="absolute w-full h-full object-cover" />
