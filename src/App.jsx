@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import html2canvas from 'html2canvas'
 
 export default function App() {
@@ -9,7 +9,14 @@ export default function App() {
   const [author, setAuthor] = useState('')
   const [fontFamily, setFontFamily] = useState('sans-serif')
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [textAlign, setTextAlign] = useState('center')
+  const [fontSize, setFontSize] = useState(20)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+
   const previewRef = useRef()
+  const textRef = useRef()
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -28,6 +35,38 @@ export default function App() {
     link.href = canvas.toDataURL()
     link.click()
   }
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true)
+    const rect = textRef.current.getBoundingClientRect()
+    setOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return
+    const containerRect = previewRef.current.getBoundingClientRect()
+    const x = e.clientX - containerRect.left - offset.x
+    const y = e.clientY - containerRect.top - offset.y
+    setPosition({ x, y })
+  }
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isDragging])
 
   const bgOptions = [
     { name: 'White', value: 'bg-white' },
@@ -131,6 +170,19 @@ export default function App() {
           </select>
         </div>
 
+
+        <div className="mt-4 w-full max-w-md">
+          <p className="font-semibold mb-1">Font Size: {fontSize}px</p>
+          <input
+            type="range"
+            min="12"
+            max="48"
+            value={fontSize}
+            onChange={(e) => setFontSize(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
         <div
           ref={previewRef}
           className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md rounded ${!image ? bgColor : ''}`}
@@ -139,20 +191,23 @@ export default function App() {
             <img src={image} alt="Selected" className="absolute w-full h-full object-cover" />
           )}
           {(quote || author) && (
-            <div className="absolute inset-0 flex flex-col justify-center p-4 bg-black/30">
-              <p
-                className="text-xl font-semibold text-center whitespace-pre-line"
-                style={{ color: textColor, fontFamily }}
-              >
-                {quote}
-              </p>
+            <div
+              ref={textRef}
+              onMouseDown={handleMouseDown}
+              className="absolute cursor-move bg-black/30 p-4 rounded"
+              style={{
+                left: position.x,
+                top: position.y,
+                color: textColor,
+                fontFamily,
+                fontSize: `${fontSize}px`,
+                textAlign,
+                maxWidth: '100%',
+              }}
+            >
+              <p className="whitespace-pre-line font-semibold">{quote}</p>
               {author && (
-                <p
-                  className="text-sm font-light text-end italic mt-2"
-                  style={{ color: textColor, fontFamily }}
-                >
-                  — {author}
-                </p>
+                <p className="text-sm font-light italic mt-2">— {author}</p>
               )}
             </div>
           )}
