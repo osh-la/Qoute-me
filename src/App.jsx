@@ -1,17 +1,13 @@
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 
-const defaultImages = [
-  '/images/bg1.jpg',
-  '/images/bg2.jpg',
-  '/images/bg3.jpg',
-  '/images/bg4.jpg',
-]
-
 export default function App() {
   const [image, setImage] = useState(null)
+  const [bgColor, setBgColor] = useState('white')
+  const [textColor, setTextColor] = useState('white')
   const [quote, setQuote] = useState('')
   const [author, setAuthor] = useState('')
+  const [fontFamily, setFontFamily] = useState('sans-serif')
   const previewRef = useRef()
 
   const handleImageUpload = (e) => {
@@ -32,14 +28,35 @@ export default function App() {
     link.click()
   }
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4">Quote Me</h1>
+  const bgOptions = [
+    { name: 'White', value: 'bg-white' },
+    { name: 'Light Gray', value: 'bg-gray-200' },
+    { name: 'Dark Gray', value: 'bg-gray-700' },
+    { name: 'Black', value: 'bg-black' },
+  ]
 
-      {/* Inputs */}
+  const textColors = [
+    { name: 'White', value: 'white' },
+    { name: 'Black', value: 'black' },
+    { name: 'Gray', value: 'gray' },
+    { name: 'Yellow', value: 'yellow' },
+  ]
+
+  const fonts = [
+    { name: 'Sans Serif', value: 'sans-serif' },
+    { name: 'Serif', value: 'serif' },
+    { name: 'Monospace', value: 'monospace' },
+    { name: 'Cursive', value: "'Dancing Script', cursive" },
+    { name: 'Elegant Serif', value: "'Playfair Display', serif" },
+    { name: 'Roboto', value: "'Roboto', sans-serif" },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gray-200 p-4 flex flex-col items-center">
+      <h1 className="text-4xl font-bold mb-4">Quote Me</h1>
+
       <div className="flex flex-col gap-2 w-full max-w-md">
         <input type="file" accept="image/*" onChange={handleImageUpload} />
-
         <textarea
           className="p-2 border rounded resize-none"
           rows="3"
@@ -47,7 +64,6 @@ export default function App() {
           value={quote}
           onChange={(e) => setQuote(e.target.value)}
         />
-
         <input
           type="text"
           className="p-2 border rounded"
@@ -57,31 +73,76 @@ export default function App() {
         />
       </div>
 
-      {/* Default image options */}
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        {defaultImages.map((src, idx) => (
-          <img
-            key={idx}
-            src={src}
-            onClick={() => setImage(src)}
-            className="w-32 h-32 object-cover cursor-pointer rounded hover:ring-2 hover:ring-black"
-          />
-        ))}
+      {/* Background color options */}
+      <div className="mt-4">
+        <p className="font-semibold mb-1">Choose Background Color:</p>
+        <div className="flex gap-2">
+          {bgOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => {
+                setImage(null)
+                setBgColor(opt.value)
+              }}
+              className={`${opt.value} w-8 h-8 rounded-full border-2 border-gray-300`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Text color options */}
+      <div className="mt-4">
+        <p className="font-semibold mb-1">Choose Text Color:</p>
+        <div className="flex gap-2">
+          {textColors.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setTextColor(opt.value)}
+              className="w-8 h-8 rounded-full border-2 border-gray-300"
+              style={{ backgroundColor: opt.value }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Font style options */}
+      <div className="mt-4">
+        <p className="font-semibold mb-1">Choose Font Style:</p>
+        <select
+          onChange={(e) => setFontFamily(e.target.value)}
+          className="p-2 border rounded"
+        >
+          {fonts.map((font) => (
+            <option key={font.value} value={font.value}>
+              {font.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Preview */}
       <div
         ref={previewRef}
-        className="relative mt-6 w-full max-w-md aspect-[4/5] bg-white overflow-hidden rounded shadow-md"
+        className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden rounded shadow-md ${!image ? bgColor : ''}`}
       >
         {image && (
           <img src={image} alt="Selected" className="absolute w-full h-full object-cover" />
         )}
         {(quote || author) && (
-          <div className="absolute inset-0 flex flex-col justify-center items-center p-4 bg-black/40">
-            <p className="text-white text-xl font-semibold text-center whitespace-pre-line">{quote}</p>
+          <div className="absolute inset-0 flex flex-col justify-center p-4 bg-black/30">
+            <p
+              className="text-xl font-semibold text-center whitespace-pre-line"
+              style={{ color: textColor, fontFamily }}
+            >
+              {quote}
+            </p>
             {author && (
-              <p className="text-white text-sm font-light mt-2 text-center">— {author}</p>
+              <p
+                className="text-sm font-light text-end italic mt-2"
+                style={{ color: textColor, fontFamily }}
+              >
+                — {author}
+              </p>
             )}
           </div>
         )}
