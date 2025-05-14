@@ -202,7 +202,7 @@ export default function App() {
               ref={textRef}
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
-              className="absolute cursor-move bg-black/30 p-4 rounded"
+              className="absolute cursor-move bg-black p-4"
               style={{
                 left: position.x,
                 top: position.y,
@@ -226,7 +226,9 @@ export default function App() {
         >
           Download Quote Image
         </button>
+        <p>osh_la</p>
       </div>
+     
     </div>
   );
 }
