@@ -13,7 +13,6 @@ export default function App() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-
   const previewRef = useRef();
   const textRef = useRef();
 
@@ -96,7 +95,7 @@ export default function App() {
   return (
     <div className={`${isDarkMode ? "dark" : ""} w-full`}>
       <div className="min-h-screen white dark:bg-gray-900 p-4 flex flex-col items-center text-black dark:text-white transition-colors duration-300">
-        <div className="w-full flex justify-between items-center max-w-md mb-4">
+        <div className="w-full flex justify-between items-center mb-4">
           <h1 className="text-4xl font-bold">Quote Me</h1>
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -106,8 +105,7 @@ export default function App() {
           </button>
         </div>
 
-        <div className="flex flex-col gap-2 w-full max-w-md">
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
+        <div className="flex flex-col gap-2 w-3/4">
           <textarea
             rows="3"
             className="p-2 border rounded resize-none dark:bg-gray-800 dark:border-gray-600"
@@ -124,7 +122,7 @@ export default function App() {
           />
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 w-2/4">
           <p className="font-semibold mb-1">Background Color:</p>
           <div className="flex gap-2">
             {bgOptions.map((bg) => (
@@ -138,9 +136,16 @@ export default function App() {
               />
             ))}
           </div>
+          <div className="mt-4 font-bold">
+            OR
+          </div>
+          <div className="mt-4 ">
+          <p className="font-semibold mb-1">Background Image:</p>
+              <input type="file" accept="image/*" onChange={handleImageUpload} />
+              </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 w-2/4">
           <p className="font-semibold mb-1">Text Color:</p>
           <div className="flex gap-2">
             {textColors.map((color) => (
@@ -172,7 +177,7 @@ export default function App() {
           </select>
         </div>
 
-        <div className="mt-4 w-full max-w-md">
+        <div className="mt-4 w-2/4 ">
           <p className="font-semibold mb-1">Font Size: {fontSize}px</p>
           <input
             type="range"
