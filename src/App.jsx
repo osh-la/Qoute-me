@@ -207,7 +207,7 @@ export default function App() {
               ref={textRef}
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
-              className="absolute cursor-move bg-black p-4"
+              className="absolute cursor-move p-4"
               style={{
                 left: position.x,
                 top: position.y,
