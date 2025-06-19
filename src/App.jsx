@@ -191,7 +191,7 @@ export default function App() {
 
         <div
           ref={previewRef}
-          className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md rounded ${
+          className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md text-center ${
             !image ? bgColor : ""
           }`}
         >
