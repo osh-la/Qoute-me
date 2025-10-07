@@ -10,7 +10,7 @@ export default function App() {
   const [fontFamily, setFontFamily] = useState("sans-serif");
   const [fontSize, setFontSize] = useState(20);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 👈 sidebar toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -97,9 +97,31 @@ export default function App() {
   ];
 
   const textColors = [
-    "white", "black", "gray", "yellow", "orange", "red", "blue", "green", "purple", "pink", "brown", "teal", "indigo", "lime", "cyan",
-    "#A0522D", "#FF69B4", "#4B0082", "#2E8B57", "#DAA520",
-    "#F5F5DC", "#D2691E", "#40E0D0", "#E6E6FA", "#FFD700",
+    "white",
+    "black",
+    "gray",
+    "yellow",
+    "orange",
+    "red",
+    "blue",
+    "green",
+    "purple",
+    "pink",
+    "brown",
+    "teal",
+    "indigo",
+    "lime",
+    "cyan",
+    "#A0522D",
+    "#FF69B4",
+    "#4B0082",
+    "#2E8B57",
+    "#DAA520",
+    "#F5F5DC",
+    "#D2691E",
+    "#40E0D0",
+    "#E6E6FA",
+    "#FFD700",
   ];
 
   const fonts = [
@@ -130,44 +152,41 @@ export default function App() {
   ];
 
   return (
-    <>
-      {/* Navbar */}
+    <div className={isDarkMode ? "dark" : ""}>
       <div className="bg-blue-600 p-6 w-full flex justify-between items-center">
         <h1 className="text-3xl font-bold text-white">QuoteMe</h1>
         <div className="flex items-center gap-4">
-          {/* Sidebar toggle (mobile only) */}
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden bg-white text-blue-600 px-3 py-1 rounded shadow"
-          >
-            ☰ Settings
-          </button>
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className="px-3 py-1 text-sm bg-white text-blue-600 rounded"
+            className="px-3 py-1 text-sm bg-white text-blue-600 rounded dark:bg-gray-700 dark:text-white transition"
           >
             {isDarkMode ? "☀ Light" : "🌙 Dark"}
           </button>
         </div>
       </div>
 
-      {/* Main Layout */}
       <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 relative">
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="md:hidden bg-blue-600 text-white px-3 py-2 rounded shadow fixed top-20 left-0 z-50"
+        >
+          {isSidebarOpen ? "Close" : "Open"}
+        </button>
 
-        {/* Sidebar */}
         <aside
           className={`fixed md:static z-20 top-0 left-0 h-full md:h-auto w-3/4 sm:w-1/2 md:w-1/4 bg-gray-100 dark:bg-gray-800 p-6 border-r dark:border-gray-700 transform transition-transform duration-300 ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } md:translate-x-0`}
         >
-          <button
-            onClick={() => setIsSidebarOpen(false)}
-            className="md:hidden mb-4 text-sm bg-blue-600 text-white px-2 py-1 rounded"
-          >
-            ✕ Close
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="md:hidden mb-4 text-sm bg-blue-600 text-white px-2 py-1 rounded"
+            >
+              ✕ Close
+            </button>
+          </div>
 
-          {/* Background */}
           <div>
             <p className="font-semibold mb-1">Background Color:</p>
             <div className="flex flex-wrap gap-2">
@@ -185,11 +204,14 @@ export default function App() {
             <div className="mt-4 font-bold text-center">OR</div>
             <div className="mt-4">
               <p className="font-semibold mb-1">Background Image:</p>
-              <input type="file" accept="image/*" onChange={handleImageUpload} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
             </div>
           </div>
 
-          {/* Text Color */}
           <div className="mt-4">
             <p className="font-semibold mb-1">Text Color:</p>
             <div className="flex flex-wrap gap-2">
@@ -204,7 +226,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Font */}
           <div className="mt-4">
             <p className="font-semibold mb-1">Font Style:</p>
             <select
@@ -223,7 +244,6 @@ export default function App() {
             </select>
           </div>
 
-          {/* Font Size */}
           <div className="mt-4">
             <p className="font-semibold mb-1">Font Size: {fontSize}px</p>
             <input
@@ -236,14 +256,12 @@ export default function App() {
             />
           </div>
         </aside>
-
-        {/* Main content */}
         <main className="flex-1 flex flex-col items-center justify-start p-6 md:ml-0">
           <div className="flex flex-col gap-2 w-full max-w-lg">
             <textarea
               rows="3"
               className="p-2 border rounded resize-none dark:bg-gray-800 dark:border-gray-600"
-              placeholder="Enter the quote..."
+              placeholder="Enter quote..."
               value={quote}
               onChange={(e) => setQuote(e.target.value)}
             />
@@ -304,6 +322,6 @@ export default function App() {
       <footer className="flex justify-center items-center h-40 bg-blue-500 text-white">
         <p>osh_la</p>
       </footer>
-    </>
+    </div>
   );
 }
