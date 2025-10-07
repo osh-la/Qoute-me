@@ -81,6 +81,19 @@ export default function App() {
       window.removeEventListener("touchend", stopDrag);
     };
   }, [isDragging]);
+  useEffect(() => {
+  if (previewRef.current && textRef.current) {
+    const preview = previewRef.current.getBoundingClientRect();
+    const text = textRef.current.getBoundingClientRect();
+
+    // Calculate center position
+    const centerX = (preview.width - text.width) / 2;
+    const centerY = (preview.height - text.height) / 2;
+
+    setPosition({ x: centerX, y: centerY });
+  }
+}, [quote, author, fontSize, fontFamily]);
+
 
   const bgOptions = [
     "bg-white",
@@ -166,12 +179,14 @@ export default function App() {
       </div>
 
       <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 relative">
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="md:hidden bg-blue-600 text-white px-3 py-2 rounded shadow fixed top-20 left-0 z-50"
-        >
-          {isSidebarOpen ? "Close" : "Open"}
-        </button>
+        {!isSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="md:hidden bg-blue-600 text-white px-3 py-2 rounded shadow fixed top-20 left-0 z-50"
+          >
+            Open
+          </button>
+        )}
 
         <aside
           className={`fixed md:static z-20 top-0 left-0 h-full md:h-auto w-3/4 sm:w-1/2 md:w-1/4 bg-gray-100 dark:bg-gray-800 p-6 border-r dark:border-gray-700 transform transition-transform duration-300 ${
