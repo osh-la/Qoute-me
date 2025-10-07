@@ -86,7 +86,6 @@ export default function App() {
     const preview = previewRef.current.getBoundingClientRect();
     const text = textRef.current.getBoundingClientRect();
 
-    // Calculate center position
     const centerX = (preview.width - text.width) / 2;
     const centerY = (preview.height - text.height) / 2;
 
@@ -271,6 +270,8 @@ export default function App() {
             />
           </div>
         </aside>
+
+
         <main className="flex-1 flex flex-col items-center justify-start p-6 md:ml-0">
           <div className="flex flex-col gap-2 w-full max-w-lg">
             <textarea
@@ -334,7 +335,7 @@ export default function App() {
         </main>
       </div>
 
-      <footer className="flex justify-center items-center h-40 bg-blue-500 text-white">
+      <footer className="flex justify-center items-center h-40 bg-blue-600 text-white">
         <p>osh_la</p>
       </footer>
     </div>
