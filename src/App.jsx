@@ -10,6 +10,7 @@ export default function App() {
   const [fontFamily, setFontFamily] = useState("sans-serif");
   const [fontSize, setFontSize] = useState(20);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 👈 sidebar toggle
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -95,10 +96,11 @@ export default function App() {
     "[background-color:#E5989B]",
   ];
 
-const textColors = [
-  "white", "black", "gray", "yellow", "orange", "red", "blue", "green", "purple", "pink", "brown", "teal", "indigo", "lime", "cyan", "#A0522D",  "#FF69B4",  "#4B0082",  "#2E8B57",  "#DAA520", 
-    "#F5F5DC",  "#D2691E", "#40E0D0", "#E6E6FA", "#FFD700",
-];
+  const textColors = [
+    "white", "black", "gray", "yellow", "orange", "red", "blue", "green", "purple", "pink", "brown", "teal", "indigo", "lime", "cyan",
+    "#A0522D", "#FF69B4", "#4B0082", "#2E8B57", "#DAA520",
+    "#F5F5DC", "#D2691E", "#40E0D0", "#E6E6FA", "#FFD700",
+  ];
 
   const fonts = [
     { name: "Sans Serif", value: "sans-serif" },
@@ -128,159 +130,180 @@ const textColors = [
   ];
 
   return (
-     <>
+    <>
+      {/* Navbar */}
       <div className="bg-blue-600 p-6 w-full flex justify-between items-center">
-        <h1 className="text-3xl font-bold">QuoteMe</h1>
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          className="px-2 py-1 text-sm border rounded dark:border-gray-500"
-        >
-          {isDarkMode ? "☀ Light" : "🌙 Dark"}
-        </button>
+        <h1 className="text-3xl font-bold text-white">QuoteMe</h1>
+        <div className="flex items-center gap-4">
+          {/* Sidebar toggle (mobile only) */}
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="md:hidden bg-white text-blue-600 px-3 py-1 rounded shadow"
+          >
+            ☰ Settings
+          </button>
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="px-3 py-1 text-sm bg-white text-blue-600 rounded"
+          >
+            {isDarkMode ? "☀ Light" : "🌙 Dark"}
+          </button>
+        </div>
       </div>
-    <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300">
 
+      {/* Main Layout */}
+      <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 relative">
 
-      {/* Sidebar */}
-      <aside className="w-full md:w-1/4 bg-gray-100 dark:bg-gray-800 p-6 border-r dark:border-gray-700 flex flex-col gap-6">
+        {/* Sidebar */}
+        <aside
+          className={`fixed md:static z-20 top-0 left-0 h-full md:h-auto w-3/4 sm:w-1/2 md:w-1/4 bg-gray-100 dark:bg-gray-800 p-6 border-r dark:border-gray-700 transform transition-transform duration-300 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0`}
+        >
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden mb-4 text-sm bg-blue-600 text-white px-2 py-1 rounded"
+          >
+            ✕ Close
+          </button>
 
-        {/* Background Options */}
-        <div>
-          <p className="font-semibold mb-1">Background Color:</p>
-          <div className="flex flex-wrap gap-2">
-            {bgOptions.map((bg) => (
-              <button
-                key={bg}
-                onClick={() => {
-                  if (image) setImage(null);
-                  setBgColor(bg);
-                }}
-                className={`${bg} w-8 h-8 rounded-full border-2 border-gray-300`}
-              />
-            ))}
+          {/* Background */}
+          <div>
+            <p className="font-semibold mb-1">Background Color:</p>
+            <div className="flex flex-wrap gap-2">
+              {bgOptions.map((bg) => (
+                <button
+                  key={bg}
+                  onClick={() => {
+                    if (image) setImage(null);
+                    setBgColor(bg);
+                  }}
+                  className={`${bg} w-8 h-8 rounded-full border-2 border-gray-300`}
+                />
+              ))}
+            </div>
+            <div className="mt-4 font-bold text-center">OR</div>
+            <div className="mt-4">
+              <p className="font-semibold mb-1">Background Image:</p>
+              <input type="file" accept="image/*" onChange={handleImageUpload} />
+            </div>
           </div>
-          <div className="mt-4 font-bold text-center">OR</div>
+
+          {/* Text Color */}
           <div className="mt-4">
-            <p className="font-semibold mb-1">Background Image:</p>
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            <p className="font-semibold mb-1">Text Color:</p>
+            <div className="flex flex-wrap gap-2">
+              {textColors.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setTextColor(color)}
+                  style={{ backgroundColor: color }}
+                  className="w-8 h-8 rounded-full border-2 border-gray-300"
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Text Color */}
-        <div>
-          <p className="font-semibold mb-1">Text Color:</p>
-          <div className="flex flex-wrap gap-2">
-            {textColors.map((color) => (
-              <button
-                key={color}
-                onClick={() => setTextColor(color)}
-                style={{ backgroundColor: color }}
-                className="w-8 h-8 rounded-full border-2 border-gray-300"
-              />
-            ))}
+          {/* Font */}
+          <div className="mt-4">
+            <p className="font-semibold mb-1">Font Style:</p>
+            <select
+              onChange={(e) => setFontFamily(e.target.value)}
+              className="p-2 w-full border rounded dark:bg-gray-700 dark:border-gray-600"
+            >
+              {fonts.map((f) => (
+                <option
+                  key={f.value}
+                  value={f.value}
+                  style={{ fontFamily: f.value }}
+                >
+                  {f.name}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
 
-        {/* Font */}
-        <div>
-          <p className="font-semibold mb-1">Font Style:</p>
-          <select
-            onChange={(e) => setFontFamily(e.target.value)}
-            className="p-2 w-full border rounded dark:bg-gray-700 dark:border-gray-600"
-          >
-            {fonts.map((f) => (
-              <option
-                key={f.value}
-                value={f.value}
-                style={{ fontFamily: f.value }}
-              >
-                {f.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Font Size */}
+          <div className="mt-4">
+            <p className="font-semibold mb-1">Font Size: {fontSize}px</p>
+            <input
+              type="range"
+              min="12"
+              max="48"
+              value={fontSize}
+              onChange={(e) => setFontSize(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </aside>
 
-        {/* Font Size */}
-        <div>
-          <p className="font-semibold mb-1">Font Size: {fontSize}px</p>
-          <input
-            type="range"
-            min="12"
-            max="48"
-            value={fontSize}
-            onChange={(e) => setFontSize(Number(e.target.value))}
-            className="w-full"
-          />
-        </div>
-      </aside>
+        {/* Main content */}
+        <main className="flex-1 flex flex-col items-center justify-start p-6 md:ml-0">
+          <div className="flex flex-col gap-2 w-full max-w-lg">
+            <textarea
+              rows="3"
+              className="p-2 border rounded resize-none dark:bg-gray-800 dark:border-gray-600"
+              placeholder="Enter the quote..."
+              value={quote}
+              onChange={(e) => setQuote(e.target.value)}
+            />
+            <input
+              type="text"
+              className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
+              placeholder="Author's name"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+          </div>
 
-      <main className="flex-1 flex flex-col items-center justify-start p-6">
-        <div className="flex flex-col gap-2 w-full max-w-lg">
-          <textarea
-            rows="3"
-            className="p-2 border rounded resize-none dark:bg-gray-800 dark:border-gray-600"
-            placeholder="Enter the quote..."
-            value={quote}
-            onChange={(e) => setQuote(e.target.value)}
-          />
-          <input
-            type="text"
-            className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-            placeholder="Author's name"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </div>
-    
-      <div
-        ref={previewRef}
-        className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md text-center ${
-          !image ? bgColor : ""
-        }`}
-      >
-        {image && (
-          <img
-            src={image}
-            alt="Selected"
-            className="absolute w-full h-full object-cover"
-          />
-        )}
-        {(quote || author) && (
           <div
-            ref={textRef}
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-            className="absolute cursor-move p-4"
-            style={{
-              left: position.x,
-              top: position.y,
-              color: textColor,
-              fontFamily,
-              fontSize: `${fontSize}px`,
-              maxWidth: "100%",
-            }}
+            ref={previewRef}
+            className={`relative mt-6 w-full max-w-md aspect-[4/5] overflow-hidden shadow-md text-center ${
+              !image ? bgColor : ""
+            }`}
           >
-            <p className="whitespace-pre-line font-semibold">{quote}</p>
-            {author && (
-              <p className="text-sm font-light italic mt-2">— {author}</p>
+            {image && (
+              <img
+                src={image}
+                alt="Selected"
+                className="absolute w-full h-full object-cover"
+              />
+            )}
+            {(quote || author) && (
+              <div
+                ref={textRef}
+                onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
+                className="absolute cursor-move p-4"
+                style={{
+                  left: position.x,
+                  top: position.y,
+                  color: textColor,
+                  fontFamily,
+                  fontSize: `${fontSize}px`,
+                  maxWidth: "100%",
+                }}
+              >
+                <p className="whitespace-pre-line font-semibold">{quote}</p>
+                {author && (
+                  <p className="text-sm font-light italic mt-2">— {author}</p>
+                )}
+              </div>
             )}
           </div>
-        )}
+
+          <button
+            onClick={downloadImage}
+            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+          >
+            Download Quote Image
+          </button>
+        </main>
       </div>
 
-      <button
-        onClick={downloadImage}
-        className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-      >
-        Download Quote Image
-      </button>
-      
-        </main>
-    </div>
-
-   <footer className="flex justify-center items-center h-40 bg-blue-500">
-     <p>osh_la</p>
-   </footer>
-     </>
+      <footer className="flex justify-center items-center h-40 bg-blue-500 text-white">
+        <p>osh_la</p>
+      </footer>
+    </>
   );
 }
