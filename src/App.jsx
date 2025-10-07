@@ -82,15 +82,34 @@ export default function App() {
   }, [isDragging]);
 
   const bgOptions = ["bg-white", "bg-gray-200", "bg-gray-700", "bg-black"];
-  const textColors = ["white", "black", "gray", "yellow"];
-  const fonts = [
-    { name: "Sans Serif", value: "sans-serif" },
-    { name: "Serif", value: "serif" },
-    { name: "Monospace", value: "monospace" },
-    { name: "Cursive", value: "'Dancing Script', cursive" },
-    { name: "Elegant Serif", value: "'Playfair Display', serif" },
-    { name: "Roboto", value: "'Roboto', sans-serif" },
-  ];
+  const textColors = ["white", "black", "gray", "yellow", "orange",  ];
+ const fonts = [
+  { name: "Sans Serif", value: "sans-serif" },
+  { name: "Serif", value: "serif" },
+  { name: "Monospace", value: "monospace" },
+  { name: "Cursive", value: "'Dancing Script', cursive" },
+  { name: "Elegant Serif", value: "'Playfair Display', serif" },
+  { name: "Roboto", value: "'Roboto', sans-serif" },
+  { name: "Poppins", value: "'Poppins', sans-serif" },
+  { name: "Inter", value: "'Inter', sans-serif" },
+  { name: "Montserrat", value: "'Montserrat', sans-serif" },
+  { name: "Raleway", value: "'Raleway', sans-serif" },
+  { name: "Lora", value: "'Lora', serif" },
+  { name: "Merriweather", value: "'Merriweather', serif" },
+  { name: "Nunito", value: "'Nunito', sans-serif" },
+  { name: "Open Sans", value: "'Open Sans', sans-serif" },
+  { name: "Source Sans Pro", value: "'Source Sans Pro', sans-serif" },
+  { name: "Manrope", value: "'Manrope', sans-serif" },
+  { name: "Josefin Sans", value: "'Josefin Sans', sans-serif" },
+  { name: "Quicksand", value: "'Quicksand', sans-serif" },
+  { name: "Great Vibes", value: "'Great Vibes', cursive" },
+  { name: "Pacifico", value: "'Pacifico', cursive" },
+  { name: "Bebas Neue", value: "'Bebas Neue', sans-serif" },
+  { name: "Oswald", value: "'Oswald', sans-serif" },
+  { name: "Rubik", value: "'Rubik', sans-serif" },
+  { name: "Playpen Sans", value: "'Playpen Sans', cursive" },
+];
+
 
   return (
     <div className={`${isDarkMode ? "dark" : ""} w-full`}>
