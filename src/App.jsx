@@ -82,17 +82,16 @@ export default function App() {
     };
   }, [isDragging]);
   useEffect(() => {
-  if (previewRef.current && textRef.current) {
-    const preview = previewRef.current.getBoundingClientRect();
-    const text = textRef.current.getBoundingClientRect();
+    if (previewRef.current && textRef.current) {
+      const preview = previewRef.current.getBoundingClientRect();
+      const text = textRef.current.getBoundingClientRect();
 
-    const centerX = (preview.width - text.width) / 2;
-    const centerY = (preview.height - text.height) / 2;
+      const centerX = (preview.width - text.width) / 2;
+      const centerY = (preview.height - text.height) / 2;
 
-    setPosition({ x: centerX, y: centerY });
-  }
-}, [quote, author, fontSize, fontFamily]);
-
+      setPosition({ x: centerX, y: centerY });
+    }
+  }, [quote, author, fontSize, fontFamily]);
 
   const bgOptions = [
     "bg-white",
@@ -168,24 +167,25 @@ export default function App() {
       <div className="bg-blue-600 p-6 w-full flex justify-between items-center">
         <h1 className="text-3xl font-bold text-white">QuoteMe</h1>
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="px-3 py-1 text-sm bg-white text-blue-600 rounded dark:bg-gray-700 dark:text-white transition"
-          >
-            {isDarkMode ? "☀ Light" : "🌙 Dark"}
-          </button>
+          {!isSidebarOpen && (
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden bg-blue-600 text-white px-3 py-6 rounded shadow fixed right-0 z-50"
+            >
+              Open
+            </button>
+          )}
         </div>
       </div>
-
-      <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 relative">
-        {!isSidebarOpen && (
+<div className="flex justify-end">
           <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="md:hidden bg-blue-600 text-white px-3 py-2 rounded shadow fixed top-20 left-0 z-50"
-          >
-            Open
-          </button>
-        )}
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className="px-3 py-1 text-sm bg-white text-blue-600 rounded dark:bg-gray-700 dark:text-white transition"
+        >
+          {isDarkMode ? "☀" : "🌙"}
+        </button>
+</div>
+      <div className="min-h-screen flex flex-col md:flex-row dark:bg-gray-900 text-black dark:text-white transition-colors duration-300 relative">
 
         <aside
           className={`fixed md:static z-20 top-0 left-0 h-full md:h-auto w-3/4 sm:w-1/2 md:w-1/4 bg-gray-100 dark:bg-gray-800 p-6 border-r dark:border-gray-700 transform transition-transform duration-300 ${
@@ -271,7 +271,6 @@ export default function App() {
           </div>
         </aside>
 
-
         <main className="flex-1 flex flex-col items-center justify-start p-6 md:ml-0">
           <div className="flex flex-col gap-2 w-full max-w-lg">
             <textarea
@@ -284,7 +283,7 @@ export default function App() {
             <input
               type="text"
               className="p-2 border rounded dark:bg-gray-800 dark:border-gray-600"
-              placeholder="Author's name"
+              placeholder="Name"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
             />
